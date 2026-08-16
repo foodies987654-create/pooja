@@ -29,7 +29,13 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
-const path = require('path');
+// Keep these lines exactly as they are
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 
 // Tell express to look for static frontend files in your root directory
 app.use(express.static(__dirname));
