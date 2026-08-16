@@ -29,6 +29,15 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
+const path = require('path');
+
+// Tell express to look for static frontend files in your root directory
+app.use(express.static(__dirname));
+
+// Explicit route to serve index.html at the homepage root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 const YOUR_DOMAIN = process.env.DOMAIN || 'http://localhost:4242';
 
 // Stripe requires the RAW request body to verify webhook signatures, so the
@@ -58,7 +67,7 @@ app.post(
         // send a receipt email, unlock the creator's content, etc.
         console.log(
           `✅ Checkout complete for session ${session.id} — ` +
-            `amount_total=${session.amount_total} ${session.currency}`
+          `amount_total=${session.amount_total} ${session.currency}`
         );
         break;
       }
